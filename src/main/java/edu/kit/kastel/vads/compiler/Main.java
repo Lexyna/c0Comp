@@ -27,6 +27,7 @@ public class Main {
         }
         Path input = Path.of(args[0]);
         Path output = Path.of(args[1]);
+        Path exe_out = Path.of((args[1].substring(0, args[1].length()-2)));
         ProgramTree program = lexAndParse(input);
         try {
             new SemanticAnalysis(program).analyze();
@@ -44,6 +45,18 @@ public class Main {
         // TODO: generate assembly and invoke gcc instead of generating abstract assembly
         String s = new CodeGenerator().generateCode(graphs);
         Files.writeString(output, s);
+        //invoke gcc
+        String path = System.getenv("path");
+        ProcessBuilder pb = new ProcessBuilder(
+                "gcc",
+                output.toString(),
+                "-o",
+                exe_out.toString()
+        );
+        pb.redirectErrorStream(true);
+        Process p = pb.start();
+
+
     }
 
     private static ProgramTree lexAndParse(Path input) throws IOException {
