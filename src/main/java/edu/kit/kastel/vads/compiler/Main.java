@@ -46,7 +46,6 @@ public class Main {
         String s = new CodeGenerator().generateCode(graphs);
         Files.writeString(output, s);
         //invoke gcc
-        String path = System.getenv("path");
         ProcessBuilder pb = new ProcessBuilder(
                 "gcc",
                 output.toString(),
